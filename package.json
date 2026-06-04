@@ -1,0 +1,24 @@
+{
+  "name": "expense-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdalsimam1-sketch/expense-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdalsimam1-sketch/expense-tracker/issues"
+  },
+  "homepage": "https://github.com/abdalsimam1-sketch/expense-tracker#readme",
+  "dependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
