@@ -7,6 +7,7 @@ require("dotenv/config");
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/errorHandler");
 require("./config/connectDB");
+const authRouter = require("./routes/authRoutes");
 
 const port = process.env.PORT || 3000;
 
@@ -24,6 +25,7 @@ app.use(
 );
 
 //routes
+app.use("/api/v1/auth", authRouter);
 
 //error handling
 app.use(notFound);
