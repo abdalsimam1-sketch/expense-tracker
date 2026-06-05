@@ -1,0 +1,10 @@
+.auth-page {
+  height: 100vh;
+}
+.auth-card {
+  max-width: 500px;
+  width: 90%;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
