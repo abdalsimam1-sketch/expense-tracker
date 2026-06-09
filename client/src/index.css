@@ -5,6 +5,17 @@
   max-width: 500px;
   width: 90%;
 }
-.cursor-pointer {
+.cursor-pointer,
+i {
   cursor: pointer;
+}
+
+.active-filter {
+  background-color: rgb(146, 146, 255) !important;
+}
+.add-expense-modal {
+  min-width: 350px;
+  width: 100%;
+  top: 3rem;
+  right: 0;
 }

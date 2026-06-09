@@ -9,5 +9,5 @@ export const register = async (formData) => {
 
 export const login = async (formData) => {
   const response = await api.post("/login", formData);
-  return response.data;
+  return response.data.token;
 };
