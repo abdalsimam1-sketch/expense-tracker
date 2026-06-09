@@ -31,6 +31,8 @@ export const Home = () => {
     handleCreate,
     handleDelete,
     handleEdit,
+    error,
+    loading,
   } = useExpenses(filter, customRange);
 
   return (
@@ -51,6 +53,7 @@ export const Home = () => {
               toggleAddModal={toggleAddModal}
               addExpenseForm={addExpenseForm}
               setAddExpenseForm={setAddExpenseForm}
+              error={error}
             ></AddEditModal>
           )}
         </div>
@@ -105,41 +108,49 @@ export const Home = () => {
       <section className="expenses-section row g-3 fw-bold">
         {expenses.map((item) => (
           <div key={item.expense_id}>
-            <div className="card p-3 d-flex justify-content-between align-items-center flex-row">
-              <div className="d-flex flex-column text-capitalize ">
-                <span>{item.description}</span>
-                <div>
-                  <span>{item.category}</span>
-                  <span> . {formatDate(item.expense_date)}</span>
+            <div className="card">
+              {loading ? (
+                <div className="h-100 d-flex justify-content-center align-items-center">
+                  <span className="spinner-border text-center mx-auto"></span>
                 </div>
-              </div>
-              <div className="d-flex gap-3 align-items-center ">
-                <span className="text-danger">
-                  {formatCurrency(item.amount)}
-                </span>
-                <div className="position-relative">
-                  <i
-                    className="bi bi-pencil-square btn"
-                    onClick={() => openEditModal(item)}
-                  ></i>
-                  {selectedExpense?.expense_id === item.expense_id && (
+              ) : (
+                <div className=" p-3 d-flex justify-content-between align-items-center flex-row">
+                  <div className="d-flex flex-column text-capitalize ">
+                    <span>{item.description}</span>
                     <div>
-                      <AddEditModal
-                        selectedExpense={selectedExpense}
-                        mode={MODES.EDIT}
-                        addExpenseForm={addExpenseForm}
-                        setAddExpenseForm={setAddExpenseForm}
-                        closeEditModal={closeEditModal}
-                        handleEdit={handleEdit}
-                      ></AddEditModal>
+                      <span>{item.category}</span>
+                      <span> . {formatDate(item.expense_date)}</span>
                     </div>
-                  )}
+                  </div>
+                  <div className="d-flex gap-3 align-items-center ">
+                    <span className="text-danger">
+                      {formatCurrency(item.amount)}
+                    </span>
+                    <div className="position-relative">
+                      <i
+                        className="bi bi-pencil-square btn"
+                        onClick={() => openEditModal(item)}
+                      ></i>
+                      {selectedExpense?.expense_id === item.expense_id && (
+                        <div>
+                          <AddEditModal
+                            selectedExpense={selectedExpense}
+                            mode={MODES.EDIT}
+                            addExpenseForm={addExpenseForm}
+                            setAddExpenseForm={setAddExpenseForm}
+                            closeEditModal={closeEditModal}
+                            handleEdit={handleEdit}
+                          ></AddEditModal>
+                        </div>
+                      )}
+                    </div>
+                    <i
+                      className="bi bi-trash btn"
+                      onClick={() => handleDelete(item.expense_id)}
+                    ></i>
+                  </div>
                 </div>
-                <i
-                  className="bi bi-trash btn"
-                  onClick={() => handleDelete(item.expense_id)}
-                ></i>
-              </div>
+              )}
             </div>
           </div>
         ))}

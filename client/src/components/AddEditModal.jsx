@@ -10,6 +10,7 @@ export const AddEditModal = ({
   handleCreate,
   handleEdit,
   selectedExpense,
+  error,
 }) => {
   return (
     <div
@@ -106,6 +107,7 @@ export const AddEditModal = ({
           ></DatePicker>
           <button className="btn btn-secondary">Save Expense</button>
         </form>
+        {error && <span className="text-danger text-center">{error}</span>}
       </section>
     </div>
   );

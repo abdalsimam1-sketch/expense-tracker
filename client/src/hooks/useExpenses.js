@@ -25,6 +25,8 @@ export const useExpenses = (filter, customRange) => {
   const [addExpenseForm, setAddExpenseForm] = useState(FORMSHAPE);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [expenses, setExpenses] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const totalSpent = useMemo(() => {
     return expenses.reduce(
@@ -60,31 +62,48 @@ export const useExpenses = (filter, customRange) => {
   };
 
   const handleFetch = async () => {
-    const data = await getExpenses(
-      filter,
-      customRange.startDate,
-      customRange.endDate,
-    );
-    console.log(data.data);
-
-    setExpenses(data.data);
+    try {
+      setLoading(true);
+      const data = await getExpenses(
+        filter,
+        customRange.startDate,
+        customRange.endDate,
+      );
+      setExpenses(data.data);
+    } catch (error) {
+      setError("Fetched failed");
+    } finally {
+      setLoading(false);
+    }
   };
   const handleCreate = async (payload) => {
-    const response = await createExpense(payload);
-    toggleAddModal();
-    setAddExpenseForm(FORMSHAPE);
-    handleFetch();
-    return response.data;
+    try {
+      const response = await createExpense(payload);
+      toggleAddModal();
+      setAddExpenseForm(FORMSHAPE);
+      handleFetch();
+      return response.data;
+    } catch (error) {
+      setError("Create failed");
+    }
   };
 
   const handleDelete = async (id) => {
-    await deleteExpense(id);
-    handleFetch();
+    try {
+      await deleteExpense(id);
+      handleFetch();
+    } catch (error) {
+      setError("Delete failed");
+    }
   };
 
   const handleEdit = async (id, payload) => {
-    await updateExpense(id, payload);
-    handleFetch();
+    try {
+      await updateExpense(id, payload);
+      handleFetch();
+    } catch (error) {
+      setError("Update failed");
+    }
   };
 
   useEffect(() => {
@@ -105,5 +124,7 @@ export const useExpenses = (filter, customRange) => {
     handleCreate,
     handleDelete,
     handleEdit,
+    error,
+    loading,
   };
 };
