@@ -58,7 +58,9 @@ export const useExpenses = (filter, customRange) => {
     { label: "Count", value: count },
     {
       label: "Top Category",
-      value: topCategory[0].toUpperCase() + topCategory.slice(1),
+      value: topCategory
+        ? topCategory[0].toUpperCase() + topCategory.slice(1)
+        : "",
     },
   ];
   const toggleAddModal = () => {
