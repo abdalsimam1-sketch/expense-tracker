@@ -37,12 +37,29 @@ export const useExpenses = (filter, customRange) => {
   const count = useMemo(() => {
     return expenses.length;
   }, [expenses]);
-  const topCategory = "Utilities";
+
+  const topCategory = useMemo(() => {
+    const categoryCounts = {};
+    expenses.forEach((expense) => {
+      if (categoryCounts[expense.category]) {
+        categoryCounts[expense.category] += 1;
+      } else {
+        categoryCounts[expense.category] = 1;
+      }
+    });
+    const max = Math.max(...Object.values(categoryCounts));
+    return Object.keys(categoryCounts).find(
+      (key) => categoryCounts[key] === max,
+    );
+  }, [expenses]);
 
   const stats = [
     { label: "Total Spent", value: formatCurrency(totalSpent) },
     { label: "Count", value: count },
-    { label: "Top Category", value: topCategory },
+    {
+      label: "Top Category",
+      value: topCategory[0].toUpperCase() + topCategory.slice(1),
+    },
   ];
   const toggleAddModal = () => {
     setAddModalOpen(addModalOpen === true ? false : true);
