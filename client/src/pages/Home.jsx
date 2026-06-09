@@ -1,11 +1,21 @@
 import { useExpenses } from "../hooks/useExpenses";
 import { StatCard } from "../components/StatCard";
 import { useFilter } from "../hooks/useFilter";
-
 import { AddEditModal } from "../components/AddEditModal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { formatDate } from "../util/formatDate";
+import { formatCurrency } from "../util/formatCurrency";
 
 export const Home = () => {
-  const { filter, selectFilter, filtersArray, FILTERS } = useFilter();
+  const {
+    filter,
+    selectFilter,
+    filtersArray,
+    FILTERS,
+    customRange,
+    setCustomRange,
+  } = useFilter();
 
   const {
     stats,
@@ -15,11 +25,13 @@ export const Home = () => {
     addExpenseForm,
     setAddExpenseForm,
     MODES,
-    toggleEditModal,
     selectedExpense,
     openEditModal,
     closeEditModal,
-  } = useExpenses();
+    handleCreate,
+    handleDelete,
+    handleEdit,
+  } = useExpenses(filter, customRange);
 
   return (
     <div className="container d-flex flex-column gap-4 pb-5">
@@ -34,6 +46,7 @@ export const Home = () => {
           </button>
           {addModalOpen && (
             <AddEditModal
+              handleCreate={handleCreate}
               mode={MODES.ADD}
               toggleAddModal={toggleAddModal}
               addExpenseForm={addExpenseForm}
@@ -51,32 +64,59 @@ export const Home = () => {
         ))}
       </section>
 
-      <section className="filters-section row g-3">
+      <section className="filters-section row g-2">
         {filtersArray.map((item) => (
-          <div className="col-auto" key={item.label}>
+          <div className="col-4 col-md-auto" key={item.label}>
             <button
-              className={`btn btn-secondary ${filter === item.value ? "active-filter" : ""}`}
+              className={`btn btn-secondary m-0 text-nowrap w-100 ${filter === item.value ? "active-filter" : ""}`}
               onClick={() => selectFilter(item.value)}
             >
               {item.label}
             </button>
           </div>
         ))}
+
+        {filter === "custom" && (
+          <section className="d-flex gap-5">
+            <DatePicker
+              placeholderText="Select start date"
+              selected={customRange.startDate}
+              showYearDropdown
+              showMonthDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCustomRange((current) => ({ ...current, startDate: date }))
+              }
+            ></DatePicker>
+            <DatePicker
+              placeholderText="Select end date"
+              selected={customRange.endDate}
+              showYearDropdown
+              showMonthDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCustomRange((current) => ({ ...current, endDate: date }))
+              }
+            ></DatePicker>
+          </section>
+        )}
       </section>
 
-      <section className="expenses-section row g-3">
+      <section className="expenses-section row g-3 fw-bold">
         {expenses.map((item) => (
           <div key={item.expense_id}>
             <div className="card p-3 d-flex justify-content-between align-items-center flex-row">
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column text-capitalize ">
                 <span>{item.description}</span>
                 <div>
                   <span>{item.category}</span>
-                  <span> . {item.expense_date}</span>
+                  <span> . {formatDate(item.expense_date)}</span>
                 </div>
               </div>
               <div className="d-flex gap-3 align-items-center ">
-                <span>{item.amount}</span>
+                <span className="text-danger">
+                  {formatCurrency(item.amount)}
+                </span>
                 <div className="position-relative">
                   <i
                     className="bi bi-pencil-square btn"
@@ -85,15 +125,20 @@ export const Home = () => {
                   {selectedExpense?.expense_id === item.expense_id && (
                     <div>
                       <AddEditModal
+                        selectedExpense={selectedExpense}
                         mode={MODES.EDIT}
                         addExpenseForm={addExpenseForm}
                         setAddExpenseForm={setAddExpenseForm}
                         closeEditModal={closeEditModal}
+                        handleEdit={handleEdit}
                       ></AddEditModal>
                     </div>
                   )}
                 </div>
-                <i className="bi bi-trash btn"></i>
+                <i
+                  className="bi bi-trash btn"
+                  onClick={() => handleDelete(item.expense_id)}
+                ></i>
               </div>
             </div>
           </div>

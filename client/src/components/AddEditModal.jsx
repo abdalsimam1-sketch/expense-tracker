@@ -7,6 +7,9 @@ export const AddEditModal = ({
   mode,
   setAddExpenseForm,
   closeEditModal,
+  handleCreate,
+  handleEdit,
+  selectedExpense,
 }) => {
   return (
     <div
@@ -25,7 +28,17 @@ export const AddEditModal = ({
       </header>
 
       <section>
-        <form className="d-flex flex-column gap-3">
+        <form
+          className="d-flex flex-column gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (mode === "add") {
+              handleCreate(addExpenseForm);
+            } else if (mode === "edit") {
+              handleEdit(selectedExpense.expense_id, addExpenseForm);
+            }
+          }}
+        >
           <div>
             <label htmlFor="description">Description</label>
             <input

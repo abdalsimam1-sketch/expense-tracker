@@ -9,6 +9,10 @@ export const useFilter = () => {
     CUSTOM: "custom",
   };
   const [filter, setFilter] = useState(FILTERS.ALL);
+  const [customRange, setCustomRange] = useState({
+    startDate: "",
+    endDate: "",
+  });
   const filtersArray = [
     { label: "All", value: FILTERS.ALL },
     { label: "Past Week", value: FILTERS.WEEK },
@@ -20,5 +24,12 @@ export const useFilter = () => {
     setFilter(selectedFilter);
   };
 
-  return { filter, filtersArray, selectFilter, FILTERS };
+  return {
+    filter,
+    filtersArray,
+    selectFilter,
+    FILTERS,
+    customRange,
+    setCustomRange,
+  };
 };

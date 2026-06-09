@@ -23,8 +23,8 @@ export const getExpenses = async (filter, startDate, endDate) => {
   return response.data;
 };
 export const updateExpense = async (id, payload) => {
-  await api.patch(`/${id}`, payload);
+  return await api.patch(`/${id}`, payload);
 };
 export const deleteExpense = async (id) => {
-  await api.delete(`/${id}`);
+  return await api.delete(`/${id}`);
 };
